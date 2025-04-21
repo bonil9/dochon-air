@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>도촌초등학교 대기정보 써비스</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0; /* 바깥 배경색을 옅은 회색 */
+      color: black;
+      font-family: 'Noto Sans KR', 'Arial', sans-serif;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+      color: #00c3ff;
+    }
+    .content-box {
+      background-color: white; /* 박스 배경색 흰색 */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .data-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+    }
+    .data-box {
+      font-size: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .icon {
+      width: 150px;
+      height: auto;
+    }
+    .value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .status-box {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .good { background-color: #2196F3; }         /* 파랑 */
+    .moderate { background-color: #4CAF50; }     /* 초록 */
+    .unhealthy { background-color: #FFEB3B; color: black; } /* 노랑 */
+    .very-unhealthy { background-color: #F44336; } /* 빨강 */
+    .time {
+      font-size: 1.5rem;
+      color: #888;
+      margin-top: 2rem;
+    }
+   .default {
+     background-color: #cccccc; /* 회색 배경 */
+     color: #333333;
+   }
+
+  </style>
+</head>
+<body>
+  <h1>밖에서 놀아도 되는지 볼까요?</h1>
+  <div class="content-box">
+    <div class="data-container">
+      <div class="data-box">
+        <img id="pm10-icon" class="icon" src="" alt="미세먼지 아이콘">
+        <div id="pm10-status" class="status-box">-</div>
+        <p>미세먼지 (PM10)</p>
+        <span id="pm10" class="value">- ㎍/㎥</span>
+      </div>
+      <div class="data-box">
+        <img id="pm25-icon" class="icon" src="" alt="초미세먼지 아이콘">
+        <div id="pm25-status" class="status-box">-</div>
+        <p>초미세먼지 (PM2.5)</p>
+        <span id="pm25" class="value">- ㎍/㎥</span>
+      </div>
+      <div class="data-box">
+        <img id="khai-icon" class="icon" src="" alt="통합대기지수 아이콘">
+        <div id="khai-status" class="status-box">-</div>
+        <p>통합대기지수 (CAI)</p>
+        <span id="khai" class="value">-</span>
+      </div>
+    </div>
+  </div>
+  <div class="time">측정시각: <span id="time">불러오는 중...</span></div>
+  <div class="source">정보제공: 에어코리아</div>
+  <script>
+  const API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
+  const station = "양구읍";
+
+  function getStatus(value, type) {
+    value = parseInt(value);
+    if (isNaN(value)) {
+  return {
+    label: "수신 정보 없음",
+    class: "default",
+    icon: "icons/default.jpg"
+  };
+}
+
+
+    if (type === "pm10") {
+      if (value <= 30) return { label: "좋음", class: "good", icon: "icons/good.png" };
+      else if (value <= 80) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
+      else if (value <= 150) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
+      else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+    }
+    if (type === "pm25") {
+      if (value <= 15) return { label: "좋음", class: "good", icon: "icons/good.png" };
+      else if (value <= 35) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
+      else if (value <= 75) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
+      else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+    }
+    if (type === "khai") {
+      if (value <= 50) return { label: "좋음", class: "good", icon: "icons/good.png" };
+      else if (value <= 100) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
+      else if (value <= 250) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
+      else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+    }
+    return { label: "-", class: "", icon: "icons/default.jpg" };
+  }
+
+  function fetchData() {
+    const url = `https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=${API_KEY}&numOfRows=1&pageNo=1&dataTerm=DAILY&ver=1.3&stationName=${station}&returnType=json`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const item = data.response.body.items[0];
+        document.getElementById("time").textContent = item.dataTime;
+
+        const pm10Status = getStatus(item.pm10Value, "pm10");
+        document.getElementById("pm10").textContent = item.pm10Value + " ㎍/㎥";
+        document.getElementById("pm10-status").textContent = pm10Status.label;
+        document.getElementById("pm10-status").className = "status-box " + pm10Status.class;
+        document.getElementById("pm10-icon").src = pm10Status.icon;
+
+        const pm25Status = getStatus(item.pm25Value, "pm25");
+        document.getElementById("pm25").textContent = item.pm25Value + " ㎍/㎥";
+        document.getElementById("pm25-status").textContent = pm25Status.label;
+        document.getElementById("pm25-status").className = "status-box " + pm25Status.class;
+        document.getElementById("pm25-icon").src = pm25Status.icon;
+
+        const khaiValue = (item.khaiValue && item.khaiValue !== "-") ? item.khaiValue : item.khaiGrade || "-"; 
+        const khaiStatus = getStatus(khaiValue, "khai");
+        document.getElementById("khai").textContent = khaiValue;
+        document.getElementById("khai-status").textContent = khaiStatus.label;
+        document.getElementById("khai-status").className = "status-box " + khaiStatus.class;
+        document.getElementById("khai-icon").src = khaiStatus.icon;
+      })
+      .catch(error => {
+        console.error("에러:", error);
+        document.getElementById("time").textContent = "정보 불러오기 실패";
+      });
+  }
+
+  fetchData();
+  setInterval(fetchData, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>
