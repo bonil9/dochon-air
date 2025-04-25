@@ -115,7 +115,7 @@
   return {
     label: "수신 정보 없음",
     class: "default",
-    icon: "icons/default.jpg"
+    icon: "icons/default.png"
   };
 }
 
@@ -138,7 +138,7 @@
       else if (value <= 250) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
       else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
     }
-    return { label: "-", class: "", icon: "icons/default.jpg" };
+    return { label: "-", class: "default", icon: "icons/default.png" };
   }
 
   function fetchData() {
