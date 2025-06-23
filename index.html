@@ -180,13 +180,13 @@
         document.getElementById("time").textContent = item.dataTime;
 
         const pm10Status = getStatus(item.pm10Value, "pm10");
-        document.getElementById("pm10").textContent = item.pm10Value + " ㎍/㎥";
+        document.getElementById("pm10").innerHTML = item.pm10Value + ' <span class="unit">㎍/㎥</span>';
         document.getElementById("pm10-status").textContent = pm10Status.label;
         document.getElementById("pm10-status").className = "status-box " + pm10Status.class;
         document.getElementById("pm10-icon").src = pm10Status.icon;
 
         const pm25Status = getStatus(item.pm25Value, "pm25");
-        document.getElementById("pm25").textContent = item.pm25Value + " ㎍/㎥";
+        document.getElementById("pm25").innerHTML = item.pm25Value + ' <span class="unit">㎍/㎥</span>';
         document.getElementById("pm25-status").textContent = pm25Status.label;
         document.getElementById("pm25-status").className = "status-box " + pm25Status.class;
         document.getElementById("pm25-icon").src = pm25Status.icon;
