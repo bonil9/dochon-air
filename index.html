@@ -149,22 +149,21 @@
     </div>
   </div>
   <div class="time">측정시각: <span id="time">불러오는 중...</span></div>
-  <img src="icons/default.png" alt="기본 아이콘">
 
   <script>
   const API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
   const station = "석사동";
 
   function getStatus(value, type) {
+  // 문자열 "-"도 NaN으로 처리되도록 명확히 필터링
+  if (value === undefined || value === null || value === "-" || isNaN(parseInt(value))) {
+    return {
+      label: "수신 정보 없음",
+      class: "default",
+      icon: "icons/default.png"
+    };
+  }
     value = parseInt(value);
-    if (isNaN(value)) {
-  return {
-    label: "수신 정보 없음",
-    class: "default",
-    icon: "icons/default.png"
-  };
-}
-
 
     if (type === "pm10") {
       if (value <= 30) return { label: "좋음", class: "good", icon: "icons/good.png" };
