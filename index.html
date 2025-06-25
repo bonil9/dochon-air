@@ -2,8 +2,7 @@
 <html lang="ko">
 <head>
 <!--제작자: 구본일
-  제작일: 2025년 04월
-  용도: 학교 현관 대형 TV 대기 상태 정보 안내
+  제작일: 2025년 04월 - 06월
 -->
   <meta charset="UTF-8">
   <title>도촌초등학교 대기정보 써비스</title>
@@ -151,14 +150,14 @@
   </div>
   <div class="time">측정시각: <span id="time">불러오는 중...</span></div>
   <script>
-  const API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
+  const API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D";
   const station = "양구읍";
 
   function getStatus(value, type) {
     value = parseInt(value);
     if (isNaN(value)) {
   return {
-    label: "수신 정보 없음",
+    label: "측정소 상태 또는 네트워크 문제로 정보를 불러오지 못하였습니다.",
     class: "default",
     icon: "icons/default.png"
   };
