@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<!--제작자: 구본일
-  제작일: 2025년 04월 - 06월
--->
   <meta charset="UTF-8">
-  <title>도촌초등학교 대기정보 써비스</title>
+  <title>도촌초등학교 대기정보 서비스</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="구본일 (Bon-il Gu)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +12,6 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #e0f7fa, #ffffff); /* 바깥 배경색을 하늘색을 띠는 그라디언트색으로 */
       color: black;
       font-family: 'LINESeedKR-Rg', 'Noto Sans KR', 'Arial', sans-serif;
       height: 100%;
@@ -24,28 +20,25 @@
       align-items: center;
       flex-direction: column;
       text-align: center;
+      transition: background 1s ease-in-out;
     }
-
     @font-face {
-    font-family: 'LINESeedKR-Rg';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
-    font-weight: 100;
-    font-style: normal;
+      font-family: 'LINESeedKR-Rg';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+      font-weight: 100;
+      font-style: normal;
     }
-    
     h1 {
       background: linear-gradient(to right, red, orange, green, blue, indigo, violet);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-size: 3.5rem;
       font-weight: 700;
-      text-align: center;
       margin-bottom: 2rem;
-      font-family: 'LINESeedKR-Rg', 'Noto Sans KR', sans-serif;
     }
     .content-box {
-      background-color: white; /* 박스 배경색 흰색 */
-      padding: 40px 40px 20px 40px;
+      background-color: white;
+      padding: 40px;
       border-radius: 25px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
       border: 1px solid #ddd;
@@ -74,7 +67,7 @@
       font-weight: 700;
     }
     .value .unit {
-      font-size: 0.5em; /* 부모(2rem)의 절반 크기인 1rem */
+      font-size: 0.5em;
       font-weight: 400;
     }
     .status-box {
@@ -89,23 +82,16 @@
       color: white;
       margin-bottom: 8px;
     }
-    .good { background-color: #2196F3; }         /* 파랑 */
-    .moderate { background-color: #4CAF50; }     /* 초록 */
-    .unhealthy { background-color: #FFEB3B; color: black; } /* 노랑 */
-    .very-unhealthy { background-color: #F44336; } /* 빨강 */
+    .good { background-color: #2196F3; }
+    .moderate { background-color: #4CAF50; }
+    .unhealthy { background-color: #FFEB3B; color: black; }
+    .very-unhealthy { background-color: #F44336; }
+    .default { background-color: #cccccc; color: #333333; }
     .time {
       font-size: 1rem;
       color: #666;
       margin-top: 2rem;
     }
-    .source {
-      font-size: 0.9rem;
-      color: #888;
-    }
-    .default {
-      background-color: #cccccc; /* 회색 배경 */
-      color: #333333;
-   }
     .footer-disclaimer {
       position: fixed;
       bottom: 0;
@@ -119,9 +105,6 @@
       padding: 8px 12px;
       z-index: 999;
     }
-
-}
-
   </style>
 </head>
 <body>
@@ -131,102 +114,142 @@
       <div class="data-box">
         <img id="pm10-icon" class="icon" src="icons/default.png" alt="미세먼지 아이콘">
         <div id="pm10-status" class="status-box">-</div>
-        <p>미세먼지(PM10)<br>
-        <span id="pm10" class="value">- <span class="unit">㎍/㎥</span></span></p>
+        <p>미세먼지(PM10)<br><span id="pm10" class="value">- <span class="unit">㎍/㎥</span></span></p>
       </div>
       <div class="data-box">
         <img id="pm25-icon" class="icon" src="icons/default.png" alt="초미세먼지 아이콘">
         <div id="pm25-status" class="status-box">-</div>
-        <p>초미세먼지(PM2.5)<br>
-        <span id="pm25" class="value">- <span class="unit">㎍/㎥</span></span></p>
+        <p>초미세먼지(PM2.5)<br><span id="pm25" class="value">- <span class="unit">㎍/㎥</span></span></p>
       </div>
       <div class="data-box">
         <img id="khai-icon" class="icon" src="icons/default.png" alt="통합대기지수 아이콘">
         <div id="khai-status" class="status-box">-</div>
-        <p>통합대기지수(CAI)<br>
-        <span id="khai" class="value">-</span></p>
+        <p>통합대기지수(CAI)<br><span id="khai" class="value">-</span></p>
       </div>
     </div>
   </div>
-  <div class="time">측정시각: <span id="time">불러오는 중...</span></div>
+  <div class="time"><span id="time">측정시각: 불러오는 중...</span></div>
 
   <script>
-  const API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
-  const station = "양구읍";
+    const AIR_QUALITY_API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
+    const AIR_QUALITY_STATION = "양구읍";
+    const OPENWEATHER_API_KEY = "98bf29b00f659348359bff9cac3779a1";
+    const OPENWEATHER_CITY = "yanggu";
 
-  function getStatus(value, type) {
-  // 문자열 "-"도 NaN으로 처리되도록 명확히 필터링
-  if (value === undefined || value === null || value === "-" || isNaN(parseInt(value))) {
-    return {
-      label: "수신 정보 없음",
-      class: "default",
-      icon: "icons/default.png"
-    };
-  }
-    value = parseInt(value);
-
-    if (type === "pm10") {
-      if (value <= 30) return { label: "좋음", class: "good", icon: "icons/good.png" };
-      else if (value <= 80) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
-      else if (value <= 150) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
-      else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+    function getStatus(value, type) {
+      if (value === undefined || value === null || value === "-" || isNaN(parseInt(value))) {
+        return { label: "수신 정보 없음", class: "default", icon: "icons/default.png" };
+      }
+      value = parseInt(value);
+      if (type === "pm10") {
+        if (value <= 30) return { label: "좋음", class: "good", icon: "icons/good.png" };
+        else if (value <= 80) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
+        else if (value <= 150) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
+        else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+      }
+      if (type === "pm25") {
+        if (value <= 15) return { label: "좋음", class: "good", icon: "icons/good.png" };
+        else if (value <= 35) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
+        else if (value <= 75) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
+        else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+      }
+      if (type === "khai") {
+        if (value <= 50) return { label: "좋음", class: "good", icon: "icons/good.png" };
+        else if (value <= 100) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
+        else if (value <= 250) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
+        else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+      }
+      return { label: "-", class: "default", icon: "icons/default.png" };
     }
-    if (type === "pm25") {
-      if (value <= 15) return { label: "좋음", class: "good", icon: "icons/good.png" };
-      else if (value <= 35) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
-      else if (value <= 75) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
-      else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+
+    function updateWeatherBackground(weatherMain) {
+      let gradient = 'linear-gradient(to bottom, #e0f7fa, #ffffff)';
+      switch (weatherMain) {
+        case 'Clear': gradient = 'linear-gradient(to bottom, #87CEEB, #FFFFFF)'; break;
+        case 'Clouds': gradient = 'linear-gradient(to bottom, #B0C4DE, #FFFFFF)'; break;
+        case 'Rain':
+        case 'Drizzle': gradient = 'linear-gradient(to bottom, #A9A9A9, #D3D3D3)'; break;
+        case 'Snow': gradient = 'linear-gradient(to bottom, #ADD8E6, #F0F8FF)'; break;
+        case 'Thunderstorm': gradient = 'linear-gradient(to bottom, #4F4F4F, #808080)'; break;
+        case 'Mist':
+        case 'Fog':
+        case 'Haze':
+        case 'Smoke':
+        case 'Dust':
+        case 'Sand':
+        case 'Ash':
+        case 'Squall':
+        case 'Tornado':
+          gradient = 'linear-gradient(to bottom, #C0C0C0, #E0E0E0)';
+          break;
+      }
+      document.body.style.background = gradient;
     }
-    if (type === "khai") {
-      if (value <= 50) return { label: "좋음", class: "good", icon: "icons/good.png" };
-      else if (value <= 100) return { label: "보통", class: "moderate", icon: "icons/moderate.png" };
-      else if (value <= 250) return { label: "나쁨", class: "unhealthy", icon: "icons/unhealthy.png" };
-      else return { label: "매우 나쁨", class: "very-unhealthy", icon: "icons/very_unhealthy.png" };
+
+    function fetchAirQualityData() {
+      const url = `https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=${AIR_QUALITY_API_KEY}&numOfRows=1&pageNo=1&dataTerm=DAILY&ver=1.3&stationName=${AIR_QUALITY_STATION}&returnType=json`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const item = data.response.body.items[0];
+          document.getElementById("time").textContent = `측정시각: ${item.dataTime}`;
+          const pm10Status = getStatus(item.pm10Value, "pm10");
+          document.getElementById("pm10").innerHTML = item.pm10Value + ' <span class="unit">㎍/㎥</span>';
+          document.getElementById("pm10-status").textContent = pm10Status.label;
+          document.getElementById("pm10-status").className = "status-box " + pm10Status.class;
+          document.getElementById("pm10-icon").src = pm10Status.icon;
+
+          const pm25Status = getStatus(item.pm25Value, "pm25");
+          document.getElementById("pm25").innerHTML = item.pm25Value + ' <span class="unit">㎍/㎥</span>';
+          document.getElementById("pm25-status").textContent = pm25Status.label;
+          document.getElementById("pm25-status").className = "status-box " + pm25Status.class;
+          document.getElementById("pm25-icon").src = pm25Status.icon;
+
+          const khaiValue = (item.khaiValue && item.khaiValue !== "-") ? item.khaiValue : item.khaiGrade || "-";
+          const khaiStatus = getStatus(khaiValue, "khai");
+          document.getElementById("khai").textContent = khaiValue;
+          document.getElementById("khai-status").textContent = khaiStatus.label;
+          document.getElementById("khai-status").className = "status-box " + khaiStatus.class;
+          document.getElementById("khai-icon").src = khaiStatus.icon;
+        })
+        .catch(error => {
+          console.error("미세먼지 정보 불러오기 에러:", error);
+          document.getElementById("time").textContent = "측정소 상태 또는 네트워크 문제로 미세먼지 정보를 불러오지 못하였습니다.";
+        });
     }
-    return { label: "-", class: "default", icon: "icons/default.png" };
-  }
 
-  function fetchData() {
-    const url = `https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?serviceKey=${API_KEY}&numOfRows=1&pageNo=1&dataTerm=DAILY&ver=1.3&stationName=${station}&returnType=json`;
+    function fetchWeatherData() {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${OPENWEATHER_CITY}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`;
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const item = data.response.body.items[0];
-        document.getElementById("time").textContent = item.dataTime;
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          if (data.weather && data.weather.length > 0) {
+            const weatherMain = data.weather[0].main;
+            updateWeatherBackground(weatherMain);
+          }
+        })
+        .catch(error => {
+          console.error("날씨 정보 불러오기 에러:", error);
+          updateWeatherBackground('default');
+        });
+    }
 
-        const pm10Status = getStatus(item.pm10Value, "pm10");
-        document.getElementById("pm10").innerHTML = item.pm10Value + ' <span class="unit">㎍/㎥</span>';
-        document.getElementById("pm10-status").textContent = pm10Status.label;
-        document.getElementById("pm10-status").className = "status-box " + pm10Status.class;
-        document.getElementById("pm10-icon").src = pm10Status.icon;
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchAirQualityData();
+      fetchWeatherData();
+    });
 
-        const pm25Status = getStatus(item.pm25Value, "pm25");
-        document.getElementById("pm25").innerHTML = item.pm25Value + ' <span class="unit">㎍/㎥</span>';
-        document.getElementById("pm25-status").textContent = pm25Status.label;
-        document.getElementById("pm25-status").className = "status-box " + pm25Status.class;
-        document.getElementById("pm25-icon").src = pm25Status.icon;
-
-        const khaiValue = (item.khaiValue && item.khaiValue !== "-") ? item.khaiValue : item.khaiGrade || "-"; 
-        const khaiStatus = getStatus(khaiValue, "khai");
-        document.getElementById("khai").textContent = khaiValue;
-        document.getElementById("khai-status").textContent = khaiStatus.label;
-        document.getElementById("khai-status").className = "status-box " + khaiStatus.class;
-        document.getElementById("khai-icon").src = khaiStatus.icon;
-      })
-      .catch(error => {
-        console.error("에러:", error);
-        document.getElementById("time").textContent = "측정소 상태 또는 네트워크 문제로 정보를 불러오지 못하였습니다.";
-      });
-  }
-
-  fetchData();
-  setInterval(fetchData, 5 * 60 * 1000);
-</script>
-<footer class="footer-disclaimer">
-  ※ 본 데이터는 실시간 관측 자료이며, 측정소 상태나 네트워크 문제로 인해 수신이 되지 않을 수 있습니다.<br>
-  (출처: 공공데이터포털 / 한국환경공단 에어코리아 대기오염정보 OpenAPI)
-</footer>
-
+    setInterval(fetchAirQualityData, 5 * 60 * 1000);
+    setInterval(fetchWeatherData, 10 * 60 * 1000);
+  </script>
+  <footer class="footer-disclaimer">
+    ※ 본 데이터는 실시간 관측 자료이며, 측정소 상태나 네트워크 문제로 인해 수신이 되지 않을 수 있습니다.<br>
+    (출처: 공공데이터포털 / 한국환경공단 에어코리아 대기오염정보 OpenAPI 및 OpenWeatherMap)
+  </footer>
 </body>
 </html>
