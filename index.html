@@ -541,16 +541,16 @@
           document.getElementById("khai-status").className = "status-box " + khaiStatus.class;
 
           const messageMap = {
-            "좋음": "🌞 안심하고 마음껏 뛰어 놀아도 괜찮아요! 🏃‍♂️",
-            "보통": "⛅ 너무 오래 놀지 않도록 해요! ⏱️",
-            "나쁨": "😷 숨이 차고 목이 아플 수 있어요! 🚫",
-            "매우 나쁨": "🏠 아쉽지만 오늘은 실내에서 놀아요! 📚",
+            "좋음": "안심하고 마음껏 뛰어 놀아도 괜찮아요!",
+            "보통": "너무 오래 놀지 않도록 해요!",
+            "나쁨": "숨이 차고 목이 아플 수 있어요!",
+            "매우 나쁨": "아쉽지만 오늘은 실내에서 놀아요!",
             "-": "정보를 불러오지 못했습니다."
           };
 
           let activityMessage = "";
           if (["Rain", "Drizzle", "Thunderstorm"].includes(currentWeatherMain)) {
-            activityMessage = "☔ 오늘은 비가 오니 실내에서 안전하게 놀아요! 🧸";
+            activityMessage = "오늘은 비가 오니 실내에서 안전하게 놀아요!";
           } else {
             activityMessage = messageMap[khaiStatus.label] || "정보를 불러오는 중이에요.";
           }
