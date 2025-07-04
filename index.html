@@ -436,7 +436,9 @@
     const AIR_QUALITY_API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
     const AIR_QUALITY_STATION = "양구읍";
     const OPENWEATHER_API_KEY = "98bf29b00f659348359bff9cac3779a1";
-    const OPENWEATHER_CITY = "yanggu";
+    const LAT = 38.1065;
+    const LON = 127.9896;
+    const OPENWEATHER_CITY = "Yanggu,KR";
 
     function getStatus(value, type) {
       if (value === undefined || value === null || value === "-" || isNaN(parseFloat(value))) {
@@ -566,7 +568,7 @@
     }
 
     function fetchWeatherData() {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${OPENWEATHER_CITY}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`;
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`;
 
       return fetch(url)
         .then(response => {
