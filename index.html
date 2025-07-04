@@ -432,6 +432,7 @@
 
   <script>
     let currentWeatherMain = null;
+    let currentWeatherDescription = null;
 
     const AIR_QUALITY_API_KEY = "I2l1MdyBG9Dp8RMWz8zuevxESwRBIVQEYbPen%2FhYeCPdLMF7Orh6RndEHg9bD3fWpf1Qc6lIpPKtLROxfHv0%2Bw%3D%3D";
     const AIR_QUALITY_STATION = "양구읍";
@@ -494,7 +495,7 @@
           break;
       }
       document.body.style.background = gradient;
-    }
+    } 
 
     function formatMeasurementTime(rawDateTimeString) {
       const date = new Date(rawDateTimeString.replace(" ", "T"));
@@ -553,7 +554,11 @@
           };
 
           let activityMessage = "";
-          if (["Rain", "Drizzle", "Thunderstorm"].includes(currentWeatherMain)) {
+
+          if (
+            ["rain", "drizzle", "thunderstorm"].includes(currentWeatherMain) ||
+            (currentWeatherDescription && currentWeatherDescription.includes("rain"))
+          ) {
             activityMessage = "오늘은 비가 오니 실내에서 안전하게 놀아요!";
           } else {
             activityMessage = messageMap[khaiStatus.label] || "정보를 불러오는 중이에요.";
@@ -562,8 +567,8 @@
           document.getElementById("activity-message").textContent = activityMessage;
         })
         .catch(error => {
-          console.error("미세먼지 정보 불러오기 에러:", error);
-          document.getElementById("time").textContent = "측정소 상태 또는 네트워크 문제로 미세먼지 정보를 불러오지 못하였습니다.";
+          console.error("대기질 정보 불러오기 에러:", error);
+          document.getElementById("activity-message").textContent = "대기질 정보를 불러오는 중 문제가 발생했습니다.";
         });
     }
 
@@ -578,8 +583,12 @@
         .then(data => {
           if (data.weather && data.weather.length > 0) {
             const weatherMain = data.weather[0].main;
+            const weatherDescription = data.weather[0].description;
+            console.log("🌧 main:", weatherMain);
+            console.log("🌦 description:", weatherDescription);
             updateWeatherBackground(weatherMain);
-            currentWeatherMain = weatherMain;
+            currentWeatherMain = weatherMain.toLowerCase();
+            currentWeatherDescription = weatherDescription.toLowerCase();
           }
         })
         .catch(error => {
@@ -588,7 +597,7 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
       fetchWeatherData().then(() => {
         fetchAirQualityData();
       });
