@@ -378,6 +378,31 @@
       z-index: 3;              /* 다른 요소에 가리지 않도록 */
     }
 
+    .school-logo-container {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      z-index: 9999;
+      background-color: rgba(255, 255, 255, 0.7); /* 약간의 배경 */
+      padding: 4px 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .school-logo {
+      width: 32px;
+      height: auto;
+      margin-right: 8px;
+    }
+
+    .school-name {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+    }
   </style>
 </head>
 <body>
@@ -389,6 +414,11 @@
   <div class="cloud cloud5"></div>
   <div class="moongae-background"></div>
 
+  <!-- 학교 로고 -->
+  <div class="school-logo-container">
+    <img src="icons/dochon_logo.png" alt="도촌초 로고" class="school-logo">
+    <span class="school-name">도촌초등학교</span>
+  </div>
   <h1>밖에서 놀아도 되는지 볼까요?</h1>
   <div class="box-wrapper">
     <!-- 왼쪽 박스 -->
